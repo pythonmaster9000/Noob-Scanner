@@ -413,13 +413,66 @@ void compare_scan_ui(HANDLE processHandle){
 
 // takes user input of value to change to and the previously declared data type
 void change_val_ui(HANDLE processHandle){
+    gotoxy(0,0);
+    for (list<void*>::iterator i=changed_values_list.begin(); i!=changed_values_list.end(); i++){
+        cout << *i << endl;
+    }
+    cout << "Above are all addresses in the match list, if none then find matches using compare" << endl;
     int choice;
     string str_choice;
-    gotoxy(0,0);
-    cout << "Change value of addresses? 0 no 1 yes" << endl;
-    getline(cin, str_choice);
-    choice = stoi(str_choice);
-    if(choice == 1){
+    cout << "Change value of all addresses, manual add address or back" << endl;
+    //getline(cin, str_choice);
+    //choice = stoi(str_choice);
+    gotoxy(88,1);
+    cout << "All addresses  ";
+    gotoxy(88,2);
+    cout << "Manual add  ";
+    gotoxy(88,3);
+    cout << "Back <";
+    int counter = 2;
+    for (int i =0;;){
+        char key = getch();
+        if(key == '\r'){
+            clear();
+            break;
+        }
+        gotoxy(88,1);
+        cout << "All addresses  ";
+        gotoxy(88,2);
+        cout << "Manual add  ";
+        gotoxy(88,3);
+        cout << "Back  ";
+        if(key == 72){
+            counter -= 1;
+            if (counter < 0){
+                counter = 0;
+            }
+        }
+        if (key == 80){
+            counter += 1;
+            if (counter > 2){
+                counter = 2;
+            }
+        }
+
+        if (counter == 0){
+            gotoxy(88,1);
+            cout << "All addresses <";
+
+        }
+        if (counter == 1){
+            gotoxy(88,2);
+            cout << "Manual add <";
+
+        }
+        if (counter == 2){
+            gotoxy(88,3);
+            cout << "Back <";
+
+        }
+
+    }
+    if(counter == 0){
         // Add according vals for data type
         string str_testval;
         cout << "Input value to change to " << endl;
@@ -454,6 +507,34 @@ void change_val_ui(HANDLE processHandle){
         if (Type_of_value == 's'){
             double test_val;
             test_val = stoi(str_testval);
+        }
+
+    }
+    if(counter == 2){
+        return;
+    }
+    if (counter == 1){
+            // Use diff data types ccording to data type
+        gotoxy(0,0);
+        for (list<void*>::iterator i=changed_values_list.begin(); i!=changed_values_list.end(); i++){
+            cout << *i << endl;
+        }
+        string address_to_use;
+        cout << "Input address to change (double) ";
+        getline(cin, address_to_use);
+        int address_val = stoi(address_to_use,0,16);
+        string str_testval;
+        cout << "Input value to change to " << endl;
+        getline(cin, str_testval);
+        double test_val = stoi(str_testval);
+
+        DWORD64 newvaluesize = sizeof(test_val);
+        cout << address_val << endl;
+        if(WriteProcessMemory(processHandle, (LPVOID)address_val, &test_val, newvaluesize, NULL)){
+        cout << "Write success" << endl;
+        }
+        else{
+        cout << "double write fail";
         }
 
     }
