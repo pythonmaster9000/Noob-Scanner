@@ -231,7 +231,7 @@ void read_and_search(int find_value, MEMORY_BASIC_INFORMATION TESTmb, HANDLE Pha
 }
 
 
-// Function to use virtual query to scan program and copy contents to struct
+// Function to use virtual query to scan program and give contents to read process memory
 void vqe_scan(HANDLE Processhandle, int find_value, char Datatype, string string_look){
 
     MEMORY_BASIC_INFORMATION membuffer;
